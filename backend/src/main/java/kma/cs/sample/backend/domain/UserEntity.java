@@ -3,7 +3,7 @@ package kma.cs.sample.backend.domain;
 import lombok.Data;
 
 @Data(staticConstructor = "of")
-public class User {
+public class UserEntity {
 
     private final int id;
     private final String login;

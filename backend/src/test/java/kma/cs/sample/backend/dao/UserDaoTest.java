@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DatabaseTearDown;
 
-import kma.cs.sample.backend.domain.User;
+import kma.cs.sample.backend.domain.UserEntity;
 import kma.cs.sample.backend.exception.UserNotFoundException;
 
 @DatabaseTearDown("/tearDown.xml")      // clean-up database or specific tables after each test
@@ -29,9 +29,9 @@ class UserDaoTest extends AbstractDaoTest {
     void shouldFindUserByLogin() {
         assertThat(userDao.getUserByLogin("login1"))
             .extracting(
-                User::getId,
-                User::getLogin,
-                User::getFullName
+                UserEntity::getId,
+                UserEntity::getLogin,
+                UserEntity::getFullName
             )
             .containsExactly(
                 1,

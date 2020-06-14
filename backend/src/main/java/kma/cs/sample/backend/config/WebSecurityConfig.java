@@ -16,7 +16,10 @@ import java.util.stream.Stream;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,12 +27,22 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import kma.cs.sample.backend.security.InitialJwtAuthenticationFilter;
+import kma.cs.sample.backend.security.JwtTokenProvider;
+import kma.cs.sample.backend.security.SecurityConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
+@Import(SecurityConfig.class)
 @Configuration
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final AuthenticationProvider authenticationProvider;
+    private final ObjectMapper objectMapper;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -52,17 +65,29 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf()
             .disable()
             .cors()
-            .and()
+        .and()
             .authorizeRequests()
             .anyRequest().permitAll()
-            .and()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        .and()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
+            .addFilter(jwtAuthenticationFilter());
     }
 
     @SneakyThrows
     @Override
     public AuthenticationManager authenticationManagerBean() {
         return super.authenticationManagerBean();
+    }
+
+    @Override
+    protected void configure(final AuthenticationManagerBuilder auth) {
+        auth.authenticationProvider(authenticationProvider);
+    }
+
+
+    private InitialJwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new InitialJwtAuthenticationFilter(authenticationManagerBean(), objectMapper, jwtTokenProvider);
     }
 
 }
