@@ -1,6 +1,6 @@
 package kma.cs.sample.desktop.exception;
 
-import kma.cs.sample.domain.response.ErrorResponseDto;
+import kma.cs.sample.domain.ErrorResponseDto;
 import lombok.Getter;
 
 public class LoginException extends Exception {

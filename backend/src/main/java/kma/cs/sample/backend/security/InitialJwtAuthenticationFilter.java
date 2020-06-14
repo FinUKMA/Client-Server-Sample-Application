@@ -18,9 +18,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kma.cs.sample.backend.domain.AuthenticatedUser;
 import kma.cs.sample.backend.exception.UserNotFoundException;
-import kma.cs.sample.domain.request.UserCredentialsDto;
-import kma.cs.sample.domain.response.ErrorResponseDto;
-import kma.cs.sample.domain.user.AuthenticatedUserDto;
+import kma.cs.sample.domain.UserCredentialsDto;
+import kma.cs.sample.domain.ErrorResponseDto;
+import kma.cs.sample.domain.AuthenticatedUserDto;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 

@@ -13,7 +13,7 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DatabaseTearDown;
 
 import kma.cs.sample.backend.AbstractSpringBootTest;
-import kma.cs.sample.domain.request.UserCredentialsDto;
+import kma.cs.sample.domain.UserCredentialsDto;
 
 @DatabaseTearDown("/tearDown.xml")
 @DatabaseSetup("/SecurityTest/initData.xml")

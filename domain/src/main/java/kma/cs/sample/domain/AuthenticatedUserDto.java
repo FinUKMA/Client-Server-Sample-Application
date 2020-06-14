@@ -1,4 +1,4 @@
-package kma.cs.sample.domain.user;
+package kma.cs.sample.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

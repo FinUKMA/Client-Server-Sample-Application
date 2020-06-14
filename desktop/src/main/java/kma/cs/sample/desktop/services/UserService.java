@@ -11,9 +11,9 @@ import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
 import kma.cs.sample.desktop.PropertiesProvider;
 import kma.cs.sample.desktop.exception.LoginException;
-import kma.cs.sample.domain.request.UserCredentialsDto;
-import kma.cs.sample.domain.response.ErrorResponseDto;
-import kma.cs.sample.domain.user.AuthenticatedUserDto;
+import kma.cs.sample.domain.UserCredentialsDto;
+import kma.cs.sample.domain.ErrorResponseDto;
+import kma.cs.sample.domain.AuthenticatedUserDto;
 
 public class UserService {
 
