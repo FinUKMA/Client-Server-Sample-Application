@@ -1,7 +1,4 @@
 package kma.cs.sample.backend.dao;
-
-import static kma.cs.sample.backend.dao.DaoUtils.toArray;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -37,7 +34,7 @@ public class ProductDao {
     }
 
     public Product getById(final int id) {
-        final Product product = jdbcTemplate.query("select * from products where id = ?", toArray(id), ProductDao::productRowMapper);
+        final Product product = jdbcTemplate.query("select * from products where id = ?", new Object[] { id }, ProductDao::productRowMapper);
         if (product == null) {
             throw new ProductNotFoundException(id);
         }

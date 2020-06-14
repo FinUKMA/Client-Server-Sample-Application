@@ -7,6 +7,7 @@ import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 
+import kma.cs.sample.desktop.GlobalContext;
 import kma.cs.sample.domain.Message;
 
 public class WebSocketMessageHandler extends StompSessionHandlerAdapter {
@@ -20,6 +21,7 @@ public class WebSocketMessageHandler extends StompSessionHandlerAdapter {
         StompHeaders sendHeaders = new StompHeaders();
         sendHeaders.setDestination("/app/chat");
         sendHeaders.setReceiptId("1");
+        sendHeaders.add("Authorization", GlobalContext.AUTHENTICATED_USER.getAccessToken());
 
         session.send(sendHeaders, new Message("Nicky", "Howdy"));
     }
