@@ -21,19 +21,18 @@ public class WebSocketConfig extends AbstractSecurityWebSocketMessageBrokerConfi
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic");
         config.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/chat").setAllowedOrigins("*");
+        registry.addEndpoint("/execute").setAllowedOrigins("*");
     }
 
     @Override
     protected void configureInbound(final MessageSecurityMetadataSourceRegistry messages) {
         messages
-            .simpDestMatchers("/chat").authenticated()
+            .simpDestMatchers("/execute").authenticated()
             .simpTypeMatchers(SimpMessageType.CONNECT, SimpMessageType.UNSUBSCRIBE, SimpMessageType.DISCONNECT).permitAll();
     }
 

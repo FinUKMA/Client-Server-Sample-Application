@@ -1,15 +1,19 @@
 package kma.cs.sample.domain.packet;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data(staticConstructor = "of")
 @Builder(builderClassName = "Builder")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Packet<T> {
 
-    private final long packetId;
-    private final Command<T> command;
-    private final T body;
-    private final int userId;
+    private long packetId;
+    private Command<T> command;
+    private T body;
+    private int userId;
 
 }

@@ -1,6 +1,7 @@
 package kma.cs.sample.desktop.websocket;
 
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
@@ -8,22 +9,34 @@ import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 
 import kma.cs.sample.desktop.GlobalContext;
+import kma.cs.sample.domain.ByteMessage;
 import kma.cs.sample.domain.Message;
+import kma.cs.sample.domain.Product;
+import kma.cs.sample.domain.packet.Command;
+import kma.cs.sample.domain.packet.Encoder;
+import kma.cs.sample.domain.packet.Packet;
 
 public class WebSocketMessageHandler extends StompSessionHandlerAdapter {
 
     @Override
     public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
         System.out.println("New session established : " + session.getSessionId());
-        session.subscribe("/topic/messages", this);
-
 
         StompHeaders sendHeaders = new StompHeaders();
-        sendHeaders.setDestination("/app/chat");
-        sendHeaders.setReceiptId("1");
+        sendHeaders.setDestination("/app/execute");
         sendHeaders.add("Authorization", GlobalContext.AUTHENTICATED_USER.getAccessToken());
 
-        session.send(sendHeaders, new Message("Nicky", "Howdy"));
+        session.send(
+            sendHeaders,
+            new ByteMessage(Encoder.encode(
+                Packet.<Product>builder()
+                    .packetId(1L)
+                    .userId(1)
+                    .body(Product.of("name1", BigDecimal.valueOf(1.1), BigDecimal.valueOf(2.2)))
+                    .command(Command.CREATE_PRODUCT)
+                    .build()
+            ))
+        );
     }
 
     @Override
