@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kma.cs.sample.backend.domain.AuthenticatedUser;
 import kma.cs.sample.backend.exception.UserNotFoundException;
-import kma.cs.sample.domain.request.UserCredentials;
+import kma.cs.sample.domain.request.UserCredentialsDto;
 import kma.cs.sample.domain.response.ErrorResponse;
 import kma.cs.sample.domain.user.AuthenticatedUserDto;
 import lombok.SneakyThrows;
@@ -46,7 +46,7 @@ public class InitialJwtAuthenticationFilter extends UsernamePasswordAuthenticati
     @SneakyThrows
     @Override
     public Authentication attemptAuthentication(final HttpServletRequest request, final HttpServletResponse response) {
-        final UserCredentials userCredentials = objectMapper.readValue(request.getInputStream(), UserCredentials.class);
+        final UserCredentialsDto userCredentials = objectMapper.readValue(request.getInputStream(), UserCredentialsDto.class);
 
         final Authentication authToken =
             new UsernamePasswordAuthenticationToken(userCredentials.getLogin(), userCredentials.getPassword(), List.of());
@@ -61,15 +61,12 @@ public class InitialJwtAuthenticationFilter extends UsernamePasswordAuthenticati
 
         final AuthenticatedUser authenticatedUser = (AuthenticatedUser) auth.getPrincipal();
         final String token = jwtTokenProvider.generateToken(authenticatedUser);
-
-        log.debug("Generate token {} from user with login {}", token, authenticatedUser.getUsername());
-
         final AuthenticatedUserDto authenticatedUserDto = AuthenticatedUserDto.builder()
+            .accessToken(token)
             .login(authenticatedUser.getUsername())
             .fullName(authenticatedUser.getFullName())
             .build();
 
-        response.addHeader(AUTHORIZATION_HEADER, token);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().write(objectMapper.writeValueAsString(authenticatedUserDto));
     }

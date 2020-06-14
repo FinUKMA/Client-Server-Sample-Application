@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder(builderClassName = "Builder")
 public class AuthenticatedUserDto {
 
+    private String accessToken;
     private String login;
     private String fullName;
 
