@@ -10,9 +10,9 @@ import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 
 import kma.cs.sample.desktop.GlobalContext;
 import kma.cs.sample.domain.ByteMessage;
-import kma.cs.sample.domain.Message;
 import kma.cs.sample.domain.Product;
 import kma.cs.sample.domain.packet.Command;
+import kma.cs.sample.domain.packet.Decoder;
 import kma.cs.sample.domain.packet.Encoder;
 import kma.cs.sample.domain.packet.Packet;
 
@@ -22,7 +22,9 @@ public class WebSocketMessageHandler extends StompSessionHandlerAdapter {
     public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
         System.out.println("New session established : " + session.getSessionId());
 
-        StompHeaders sendHeaders = new StompHeaders();
+        session.subscribe("/topic/process-ok", this);
+
+        final StompHeaders sendHeaders = new StompHeaders();
         sendHeaders.setDestination("/app/execute");
         sendHeaders.add("Authorization", GlobalContext.AUTHENTICATED_USER.getAccessToken());
 
@@ -40,13 +42,13 @@ public class WebSocketMessageHandler extends StompSessionHandlerAdapter {
     }
 
     @Override
-    public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
+    public void handleException(final StompSession session, final StompCommand command, final StompHeaders headers, final byte[] payload, final Throwable exception) {
         exception.printStackTrace();
     }
 
     @Override
-    public Type getPayloadType(StompHeaders headers) {
-        return Message.class;
+    public Type getPayloadType(final StompHeaders headers) {
+        return ByteMessage.class;
     }
 
     @Override
@@ -55,9 +57,10 @@ public class WebSocketMessageHandler extends StompSessionHandlerAdapter {
     }
 
     @Override
-    public void handleFrame(StompHeaders headers, Object payload) {
-        Message msg = (Message) payload;
-        System.out.println("Received : " + msg.getText() + " from : " + msg.getFrom());
+    public void handleFrame(final StompHeaders headers, final Object payload) {
+        final ByteMessage msg = (ByteMessage) payload;
+        final Packet<?> packet = Decoder.decode(msg.getMessage());
+        System.out.println("Received : " + packet);
     }
 
 }

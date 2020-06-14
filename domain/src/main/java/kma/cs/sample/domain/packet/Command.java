@@ -11,6 +11,7 @@ public class Command<T> {
 
     private static final List<Command<?>> ALL_COMMANDS = new ArrayList<>();
 
+    public static final Command<Void> OK = new Command<>(0, Void.class, "OK");
     public static final Command<Product> CREATE_PRODUCT = new Command<>(1, Product.class, "CREATE_PRODUCT");
     public static final Command<Product> GET_PRODUCT_BY_ID = new Command<>(2, Product.class, "GET_PRODUCT_BY_ID");
 
