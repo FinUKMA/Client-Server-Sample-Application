@@ -1,25 +1,20 @@
 package kma.cs.sample.desktop;
 
-import java.lang.reflect.Type;
+import java.io.IOException;
 
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
-import org.springframework.messaging.simp.stomp.StompCommand;
-import org.springframework.messaging.simp.stomp.StompHeaders;
-import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandler;
-import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
+import org.springframework.web.socket.WebSocketHttpHeaders;
 import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import kma.cs.sample.desktop.exception.LoginException;
-import kma.cs.sample.desktop.services.UserService;
-import kma.cs.sample.domain.Message;
+import kma.cs.sample.desktop.websocket.WebSocketMessageHandler;
 
 public class Main extends Application {
 
@@ -28,20 +23,15 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle("Hello World!");
-        Button btn = new Button();
-        btn.setText("Say 'Hello World'");
-        btn.setOnAction(event -> System.out.println("Hello World!"));
-
-        StackPane root = new StackPane();
-        root.getChildren().add(btn);
-        primaryStage.setScene(new Scene(root, 300, 250));
-        primaryStage.show();
-
+    public void start(Stage stage) {
         try {
-            System.out.println(UserService.login("user11", "password"));
-        } catch (LoginException e) {
+            FXMLLoader loader = new FXMLLoader();
+            VBox root = loader.load(Main.class.getResourceAsStream("/ui/login-window.fxml"));
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("Warehouse");
+            stage.show();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -50,47 +40,12 @@ public class Main extends Application {
 
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
 
-        StompSessionHandler sessionHandler = new MyStompSessionHandler();
-        stompClient.connect(PropertiesProvider.getString("backend.ws.url"), sessionHandler);
-    }
+        StompSessionHandler sessionHandler = new WebSocketMessageHandler();
 
-    public static final class MyStompSessionHandler extends StompSessionHandlerAdapter {
+        WebSocketHttpHeaders headers = new WebSocketHttpHeaders();
+        headers.add("receiptId", "1");
 
-        @Override
-        public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
-            System.out.println("New session established : " + session.getSessionId());
-            session.subscribe("/topic/messages", this);
-            session.send("/app/chat", getSampleMessage());
-        }
-
-        @Override
-        public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
-            exception.printStackTrace();
-        }
-
-        @Override
-        public Type getPayloadType(StompHeaders headers) {
-            return Message.class;
-        }
-
-        @Override
-        public void handleTransportError(final StompSession session, final Throwable exception) {
-            exception.printStackTrace();
-        }
-
-        @Override
-        public void handleFrame(StompHeaders headers, Object payload) {
-            Message msg = (Message) payload;
-            System.out.println("Received : " + msg.getText() + " from : " + msg.getFrom());
-        }
-
-        /**
-         * A sample message instance.
-         * @return instance of <code>Message</code>
-         */
-        private Message getSampleMessage() {
-            return new Message("Nicky", "Howdy");
-        }
+        stompClient.connect(PropertiesProvider.getString("backend.ws.url"), headers, sessionHandler);
     }
 
 }
