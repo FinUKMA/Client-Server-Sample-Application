@@ -43,7 +43,7 @@ public class Main extends Application {
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
 
         StompSessionHandler sessionHandler = new MyStompSessionHandler();
-        stompClient.connect("ws://localhost:8080/chat", sessionHandler);
+        stompClient.connect(PropertiesProvider.getString("backend.ws.url"), sessionHandler);
     }
 
     public static final class MyStompSessionHandler extends StompSessionHandlerAdapter {
@@ -52,14 +52,11 @@ public class Main extends Application {
         public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
             System.out.println("New session established : " + session.getSessionId());
             session.subscribe("/topic/messages", this);
-            System.out.println("Subscribed to /topic/messages");
             session.send("/app/chat", getSampleMessage());
-            System.out.println("Message sent to websocket server");
         }
 
         @Override
         public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
-            System.out.println("Got an exception");
             exception.printStackTrace();
         }
 
