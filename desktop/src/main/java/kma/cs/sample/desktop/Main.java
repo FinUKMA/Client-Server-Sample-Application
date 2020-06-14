@@ -12,13 +12,12 @@ import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import kma.cs.sample.desktop.exception.LoginException;
 import kma.cs.sample.desktop.services.UserService;
 import kma.cs.sample.domain.Message;
 
@@ -41,8 +40,8 @@ public class Main extends Application {
         primaryStage.show();
 
         try {
-            System.out.println(UserService.login("user1", "password"));
-        } catch (JsonProcessingException e) {
+            System.out.println(UserService.login("user11", "password"));
+        } catch (LoginException e) {
             e.printStackTrace();
         }
 

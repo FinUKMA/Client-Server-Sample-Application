@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor(staticName = "of")
-public class ErrorResponse {
+public class ErrorResponseDto {
 
     private String message;
 

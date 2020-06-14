@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kma.cs.sample.backend.domain.AuthenticatedUser;
 import kma.cs.sample.backend.exception.UserNotFoundException;
 import kma.cs.sample.domain.request.UserCredentialsDto;
-import kma.cs.sample.domain.response.ErrorResponse;
+import kma.cs.sample.domain.response.ErrorResponseDto;
 import kma.cs.sample.domain.user.AuthenticatedUserDto;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -79,11 +79,11 @@ public class InitialJwtAuthenticationFilter extends UsernamePasswordAuthenticati
         response.getWriter().write(objectMapper.writeValueAsString(authenticationExceptionHandler(failed)));
     }
 
-    private ErrorResponse authenticationExceptionHandler(final AuthenticationException ex) {
+    private ErrorResponseDto authenticationExceptionHandler(final AuthenticationException ex) {
         if (ex instanceof BadCredentialsException || ex.getCause() instanceof UserNotFoundException) {
-            return ErrorResponse.of("Wrong credentials");
+            return ErrorResponseDto.of("Wrong credentials");
         }
 
-        return ErrorResponse.of(ex.getMessage());
+        return ErrorResponseDto.of(ex.getMessage());
     }
 }
