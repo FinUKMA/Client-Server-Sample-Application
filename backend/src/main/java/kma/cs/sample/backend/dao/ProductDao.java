@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import kma.cs.sample.backend.exception.ProductNotFoundException;
+import kma.cs.sample.domain.NewProduct;
 import kma.cs.sample.domain.Product;
 import lombok.RequiredArgsConstructor;
 
@@ -19,14 +20,13 @@ public class ProductDao {
     private final JdbcTemplate jdbcTemplate;
 
     @Transactional
-    public Product save(final Product product) {
+    public Product save(final NewProduct product) {
         final GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
-            final PreparedStatement preparedStatement = connection.prepareStatement("insert into products(name, price, total) values (?, ?, ?)", new String[]{ "id" });
+            final PreparedStatement preparedStatement = connection.prepareStatement("insert into products(name, price, total) values (?, ?, 0)", new String[]{ "id" });
             preparedStatement.setString(1, product.getName());
             preparedStatement.setBigDecimal(2, product.getPrice());
-            preparedStatement.setBigDecimal(3, product.getTotal());
             return preparedStatement;
         }, generatedKeyHolder);
 

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import kma.cs.sample.backend.dao.ProductDao;
 import kma.cs.sample.backend.service.CommandHandler;
+import kma.cs.sample.domain.NewProduct;
 import kma.cs.sample.domain.Product;
 import kma.cs.sample.domain.packet.Command;
 import kma.cs.sample.domain.packet.Packet;
@@ -11,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-class CreateProductHandler extends CommandHandler<Product> {
+class CreateProductHandler extends CommandHandler<NewProduct> {
 
     private final ProductDao productDao;
 
@@ -22,15 +23,15 @@ class CreateProductHandler extends CommandHandler<Product> {
     }
 
     @Override
-    public Packet<Void> handle(final Packet<Product> packet) {
+    public Packet<Product> handle(final Packet<NewProduct> packet) {
         log.info("Create new product {}", packet.getBody());
-        productDao.save(packet.getBody());
+        final Product product = productDao.save(packet.getBody());
 
-        return Packet.<Void>builder()
-            .body(null)
+        return Packet.<Product>builder()
+            .body(product)
             .packetId(packet.getPacketId())
             .userId(1)
-            .command(Command.OK)
+            .command(Command.GET_PRODUCT_BY_ID)
             .build();
     }
 }

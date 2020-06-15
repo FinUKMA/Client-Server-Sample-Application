@@ -13,6 +13,7 @@ import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 
 import kma.cs.sample.backend.exception.ProductNotFoundException;
+import kma.cs.sample.domain.NewProduct;
 import kma.cs.sample.domain.Product;
 
 @DatabaseTearDown("/tearDown.xml")
@@ -24,7 +25,7 @@ class ProductDaoTest extends AbstractDaoTest {
     @Test
     @ExpectedDatabase(value = "/ProductDaoTest/expectedAfterInsertNew.xml", assertionMode = DatabaseAssertionMode.NON_STRICT)
     void shouldSaveNewProduct() {
-        assertThat(productDao.save(Product.of("name1", BigDecimal.valueOf(1.1), BigDecimal.valueOf(2.2))))
+        assertThat(productDao.save(NewProduct.of("name1", BigDecimal.valueOf(1.1))))
             .extracting(
                 Product::getId,
                 Product::getName,
@@ -35,7 +36,7 @@ class ProductDaoTest extends AbstractDaoTest {
                 1000,
                 "name1",
                 new BigDecimal("1.100"),
-                new BigDecimal("2.200")
+                new BigDecimal("0.000")
             );
     }
 

@@ -9,11 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor(staticName = "of")
 @NoArgsConstructor
-public class Product {
+public class NewProduct {
 
-    private int id;
     private String name;
     private BigDecimal price;
-    private BigDecimal total;
 
 }
+

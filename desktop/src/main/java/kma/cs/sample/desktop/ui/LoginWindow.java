@@ -1,6 +1,6 @@
 package kma.cs.sample.desktop.ui;
 
-import java.math.BigDecimal;
+import java.io.IOException;
 
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.web.socket.client.WebSocketClient;
@@ -8,14 +8,16 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import kma.cs.sample.desktop.GlobalContext;
 import kma.cs.sample.desktop.PropertiesProvider;
 import kma.cs.sample.desktop.exception.LoginException;
 import kma.cs.sample.desktop.services.UserService;
-import kma.cs.sample.domain.Product;
-import kma.cs.sample.domain.packet.Command;
 
 public class LoginWindow {
 
@@ -26,7 +28,7 @@ public class LoginWindow {
     @FXML
     private TextField messageField;
 
-    public void processLogin() {
+    public void processLogin() throws IOException {
         System.out.println("Process login");
 
         try {
@@ -39,9 +41,11 @@ public class LoginWindow {
 
             stompClient.connect(PropertiesProvider.getString("backend.ws.url"), GlobalContext.WEB_SOCKET);
 
-            GlobalContext.WEB_SOCKET.send(Command.CREATE_PRODUCT, Product.of("name1", BigDecimal.ONE, BigDecimal.TEN), response -> {
-                System.out.println("create packet response: " + response);
-            });
+            FXMLLoader loader = new FXMLLoader();
+            Stage stage = (Stage) loginField.getScene().getWindow();
+            VBox root = loader.load(getClass().getResourceAsStream("/ui/products/list.fxml"));
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
         } catch (final LoginException ex) {
             messageField.setText(ex.getErrorResponse().getMessage());
         }
