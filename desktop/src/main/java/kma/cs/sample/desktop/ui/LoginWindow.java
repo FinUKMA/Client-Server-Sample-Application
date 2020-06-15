@@ -1,7 +1,8 @@
 package kma.cs.sample.desktop.ui;
 
+import java.math.BigDecimal;
+
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
-import org.springframework.messaging.simp.stomp.StompSessionHandler;
 import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
@@ -13,7 +14,8 @@ import kma.cs.sample.desktop.GlobalContext;
 import kma.cs.sample.desktop.PropertiesProvider;
 import kma.cs.sample.desktop.exception.LoginException;
 import kma.cs.sample.desktop.services.UserService;
-import kma.cs.sample.desktop.websocket.WebSocketMessageHandler;
+import kma.cs.sample.domain.Product;
+import kma.cs.sample.domain.packet.Command;
 
 public class LoginWindow {
 
@@ -34,9 +36,12 @@ public class LoginWindow {
             WebSocketClient client = new StandardWebSocketClient();
             WebSocketStompClient stompClient = new WebSocketStompClient(client);
             stompClient.setMessageConverter(new MappingJackson2MessageConverter());
-            StompSessionHandler sessionHandler = new WebSocketMessageHandler();
 
-            stompClient.connect(PropertiesProvider.getString("backend.ws.url"), sessionHandler);
+            stompClient.connect(PropertiesProvider.getString("backend.ws.url"), GlobalContext.WEB_SOCKET);
+
+            GlobalContext.WEB_SOCKET.send(Command.CREATE_PRODUCT, Product.of("name1", BigDecimal.ONE, BigDecimal.TEN), response -> {
+                System.out.println("create packet response: " + response);
+            });
         } catch (final LoginException ex) {
             messageField.setText(ex.getErrorResponse().getMessage());
         }
