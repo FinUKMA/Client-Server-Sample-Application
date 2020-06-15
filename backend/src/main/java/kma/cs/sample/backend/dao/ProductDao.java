@@ -3,6 +3,7 @@ package kma.cs.sample.backend.dao;
 import static kma.cs.sample.backend.dao.DaoUtils.gte;
 import static kma.cs.sample.backend.dao.DaoUtils.like;
 import static kma.cs.sample.backend.dao.DaoUtils.lte;
+import static kma.cs.sample.backend.dao.DaoUtils.toArray;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -57,11 +58,11 @@ public class ProductDao {
     }
 
     public Product getById(final int id) {
-        final Product product = jdbcTemplate.query("select * from products where id = ?", new Object[] { id }, ProductDao::productRowMapper);
-        if (product == null) {
+        final List<Product> products = jdbcTemplate.query("select * from products where id = ?", toArray(id), ProductDao::productRowMapper);
+        if (products.isEmpty()) {
             throw new ProductNotFoundException(id);
         }
-        return product;
+        return products.get(0);
     }
 
     public List<Product> getList(final ProductFilter filter) {
@@ -69,7 +70,7 @@ public class ProductDao {
         final String where = query.isEmpty() ? "" : " where " + query;
         final String sql = String.format("select * from products %s order by id limit %d offset %d", where, filter.getSize(), filter.getPage() * filter.getSize());
 
-        return jdbcTemplate.query(sql, (resultSet, rowNumber) -> productRowMapper(resultSet));
+        return jdbcTemplate.query(sql, ProductDao::productRowMapper);
     }
 
     public long count(final ProductFilter filter) {
@@ -92,10 +93,8 @@ public class ProductDao {
             .collect(Collectors.joining(" AND "));
     }
 
-    private static Product productRowMapper(final ResultSet resultSet) throws SQLException {
-        return resultSet.next()
-            ? Product.of(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getBigDecimal("price"), resultSet.getBigDecimal("total"))
-            : null;
+    private static Product productRowMapper(final ResultSet resultSet, int rowNumber) throws SQLException {
+        return Product.of(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getBigDecimal("price"), resultSet.getBigDecimal("total"));
     }
 
 }
