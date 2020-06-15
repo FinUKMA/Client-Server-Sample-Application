@@ -1,12 +1,14 @@
 package kma.cs.sample.desktop.ui.products;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import kma.cs.sample.desktop.GlobalContext;
 import kma.cs.sample.domain.Product;
@@ -19,6 +21,16 @@ public class ListProductsWindow {
 
     @FXML
     private TableView<Product> productsTable;
+    @FXML
+    private TextField nameFilter;
+    @FXML
+    private TextField priceFromFilter;
+    @FXML
+    private TextField priceToFilter;
+    @FXML
+    private TextField totalFromFilter;
+    @FXML
+    private TextField totalToFilter;
 
     @FXML
     public void initialize() {
@@ -36,6 +48,11 @@ public class ListProductsWindow {
     @SuppressWarnings("unchecked")
     public void reloadProducts() {
         final ProductFilter productFilter = ProductFilter.builder()
+            .name(nameFilter.getText())
+            .priceFrom(parseBigDecimal(priceFromFilter))
+            .priceTo(parseBigDecimal(priceToFilter))
+            .totalFrom(parseBigDecimal(totalFromFilter))
+            .totalTo(parseBigDecimal(totalToFilter))
             .page(0)
             .size(200)
             .build();
@@ -51,5 +68,9 @@ public class ListProductsWindow {
                 System.out.println("unexpected response");
             }
         });
+    }
+
+    private static BigDecimal parseBigDecimal(final TextField textField) {
+        return textField.getText().isEmpty() ? null : new BigDecimal(textField.getText());
     }
 }
