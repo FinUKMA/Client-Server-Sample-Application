@@ -9,7 +9,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class DaoUtils {
 
-    public Object[] toArray(final Object... args) {
+    public static Object[] toArray(final Object... args) {
         return Arrays.stream(args)
             .toArray(Object[]::new);
     }
