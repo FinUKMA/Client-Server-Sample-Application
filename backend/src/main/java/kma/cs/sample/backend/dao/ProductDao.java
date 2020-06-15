@@ -43,6 +43,14 @@ public class ProductDao {
         return getById(generatedKeyHolder.getKey().intValue());
     }
 
+    @Transactional
+    public void update(final Product product) {
+        jdbcTemplate.update(
+            "update products set name = ?, price = ?, total = ? where id = ?",
+            product.getName(), product.getPrice(), product.getTotal(), product.getId()
+        );
+    }
+
     public Product getById(final int id) {
         final Product product = jdbcTemplate.query("select * from products where id = ?", new Object[] { id }, ProductDao::productRowMapper);
         if (product == null) {
@@ -54,7 +62,7 @@ public class ProductDao {
     public List<Product> getList(final ProductFilter filter) {
         final String query = filterToWhereClause(filter);
         final String where = query.isEmpty() ? "" : " where " + query;
-        final String sql = String.format("select * from products %s limit %d offset %d", where, filter.getSize(), filter.getPage() * filter.getSize());
+        final String sql = String.format("select * from products %s order by id limit %d offset %d", where, filter.getSize(), filter.getPage() * filter.getSize());
 
         return jdbcTemplate.query(sql, (resultSet, rowNumber) -> productRowMapper(resultSet));
     }
@@ -64,10 +72,7 @@ public class ProductDao {
         final String where = query.isEmpty() ? "" : " where " + query;
         final String sql = String.format("select count(*) as total_products from products %s", where);
 
-        return jdbcTemplate.query(sql, rs -> {
-            rs.next();
-            return rs.getLong("total_products");
-        });
+        return jdbcTemplate.queryForObject(sql, Long.class);
     }
 
     private static String filterToWhereClause(final ProductFilter filter) {

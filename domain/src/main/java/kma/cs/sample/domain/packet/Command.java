@@ -19,6 +19,7 @@ public class Command<T> {
     public static final Command<Product> GET_PRODUCT_BY_ID = new Command<>(2, Product.class, "GET_PRODUCT_BY_ID");
     public static final Command<ProductFilter> GET_PRODUCTS_LIST = new Command<>(3, ProductFilter.class, "GET_PRODUCTS_LIST");
     public static final Command<ProductList> RESPONSE_PRODUCTS_LIST = new Command<>(4, ProductList.class, "RESPONSE_PRODUCTS_LIST");
+    public static final Command<Product> UPDATE_PRODUCT = new Command<>(5, Product.class, "UPDATE_PRODUCT");
 
     private final int command;
     private final Class<T> klass;

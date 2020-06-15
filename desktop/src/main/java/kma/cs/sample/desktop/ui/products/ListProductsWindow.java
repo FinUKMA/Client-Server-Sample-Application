@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import kma.cs.sample.desktop.GlobalContext;
 import kma.cs.sample.domain.Product;
@@ -35,6 +36,25 @@ public class ListProductsWindow {
     @FXML
     public void initialize() {
         reloadProducts();
+
+        productsTable.setOnMouseClicked(event -> {
+            try {
+                if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+                    final Product selectedProduct = productsTable.getSelectionModel().getSelectedItem();
+
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/products/edit-product.fxml"));
+                    Parent root = loader.load();
+                    EditProductWindow window = loader.getController();
+                    window.receiveProduct(selectedProduct);
+                    Stage stage = new Stage();
+                    stage.setTitle("Edit product #" + selectedProduct.getId());
+                    stage.setScene(new Scene(root));
+                    stage.show();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public void addNewProductWindow() throws IOException {
@@ -62,6 +82,7 @@ public class ListProductsWindow {
 
             if (response.getCommand() == Command.RESPONSE_PRODUCTS_LIST) {
                 final Packet<ProductList> productListPacket = (Packet<ProductList>) response;
+                System.out.println("returned products " + productListPacket.getBody().getProducts().size());
                 productsTable.getItems().clear();
                 productsTable.getItems().addAll(productListPacket.getBody().getProducts());
             } else {

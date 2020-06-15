@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DatabaseTearDown;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
@@ -44,6 +45,13 @@ class ProductDaoTest extends AbstractDaoTest {
     void shouldThrowException_whenNoProductById() {
         assertThatThrownBy(() -> productDao.getById(100000))
             .isInstanceOf(ProductNotFoundException.class);
+    }
+
+    @Test
+    @DatabaseSetup("/ProductDaoTest/productBeforeUpdate.xml")
+    @ExpectedDatabase(value = "/ProductDaoTest/productAfterUpdate.xml", assertionMode = DatabaseAssertionMode.NON_STRICT)
+    void shouldUpdateProductById() {
+        productDao.update(Product.of(1, "name_update", BigDecimal.valueOf(1111), BigDecimal.valueOf(700)));
     }
 
 }

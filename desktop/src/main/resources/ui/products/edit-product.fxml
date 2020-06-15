@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?language JavaScript?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox layoutX="10.0" layoutY="10.0" prefHeight="194.0" prefWidth="383.0" spacing="10" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kma.cs.sample.desktop.ui.products.EditProductWindow">
+    <style>
+        -fx-padding: 10;
+        -fx-border-style: solid inside;
+        -fx-border-width: 2;
+        -fx-border-insets: 5;
+        -fx-border-radius: 5;
+        -fx-border-color: blue;
+    </style>
+    <children>
+        <Label prefHeight="17.0" prefWidth="83.0" text="Name"/>
+        <TextField fx:id="nameField"/>
+        <Label prefHeight="17.0" prefWidth="83.0" text="Price"/>
+        <TextField fx:id="priceField"/>
+        <Label prefHeight="17.0" prefWidth="83.0" text="Total"/>
+        <TextField fx:id="totalField"/>
+        <Button mnemonicParsing="false" text="Update" onAction="#saveProduct"/>
+        <TextField fx:id="messageField" editable="false"/>
+    </children>
+</VBox>
