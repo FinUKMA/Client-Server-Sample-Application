@@ -5,6 +5,8 @@ import java.util.List;
 
 import kma.cs.sample.domain.NewProduct;
 import kma.cs.sample.domain.Product;
+import kma.cs.sample.domain.ProductFilter;
+import kma.cs.sample.domain.ProductList;
 import lombok.Data;
 
 @Data
@@ -15,6 +17,8 @@ public class Command<T> {
     public static final Command<Void> OK = new Command<>(0, Void.class, "OK");
     public static final Command<NewProduct> CREATE_PRODUCT = new Command<>(1, NewProduct.class, "CREATE_PRODUCT");
     public static final Command<Product> GET_PRODUCT_BY_ID = new Command<>(2, Product.class, "GET_PRODUCT_BY_ID");
+    public static final Command<ProductFilter> GET_PRODUCTS_LIST = new Command<>(3, ProductFilter.class, "GET_PRODUCTS_LIST");
+    public static final Command<ProductList> RESPONSE_PRODUCTS_LIST = new Command<>(4, ProductList.class, "RESPONSE_PRODUCTS_LIST");
 
     private final int command;
     private final Class<T> klass;

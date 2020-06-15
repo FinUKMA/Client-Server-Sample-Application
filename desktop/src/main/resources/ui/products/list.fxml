@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?language JavaScript?>
+
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-
 <VBox layoutX="10.0" layoutY="10.0" prefHeight="546.0" prefWidth="781.0" spacing="10" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="kma.cs.sample.desktop.ui.products.ListProductsWindow">
     <style>
         -fx-padding: 10;
@@ -20,14 +21,23 @@
         <HBox prefHeight="54.0" prefWidth="747.0">
             <children>
                 <Button mnemonicParsing="false" prefHeight="54.0" prefWidth="133.0" text="Add new product" onAction="#addNewProductWindow" />
+                <Button mnemonicParsing="false" prefHeight="54.0" prefWidth="133.0" text="Refresh products" onAction="#reloadProducts" />
             </children>
         </HBox>
-        <TableView prefHeight="459.0" prefWidth="747.0">
+        <TableView prefHeight="459.0" prefWidth="747.0" fx:id="productsTable">
             <columns>
-                <TableColumn prefWidth="75.0" text="ID" />
-                <TableColumn prefWidth="276.0" text="Name" />
-                <TableColumn prefWidth="107.0" text="Price" />
-                <TableColumn prefWidth="287.0" text="Total" />
+                <TableColumn prefWidth="75.0" text="ID">
+                    <cellValueFactory><PropertyValueFactory property="id" /></cellValueFactory>
+                </TableColumn>
+                <TableColumn prefWidth="276.0" text="Name">
+                    <cellValueFactory><PropertyValueFactory property="name" /></cellValueFactory>
+                </TableColumn>
+                <TableColumn prefWidth="107.0" text="Price">
+                    <cellValueFactory><PropertyValueFactory property="price" /></cellValueFactory>
+                </TableColumn>
+                <TableColumn prefWidth="287.0" text="Total">
+                    <cellValueFactory><PropertyValueFactory property="total" /></cellValueFactory>
+                </TableColumn>
             </columns>
         </TableView>
     </children>
