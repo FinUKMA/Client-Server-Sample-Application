@@ -54,4 +54,11 @@ class ProductDaoTest extends AbstractDaoTest {
         productDao.update(Product.of(1, "name_update", BigDecimal.valueOf(1111), BigDecimal.valueOf(700)));
     }
 
+    @Test
+    @DatabaseSetup("/ProductDaoTest/productBeforeDelete.xml")
+    @ExpectedDatabase(value = "/ProductDaoTest/productAfterDelete.xml", assertionMode = DatabaseAssertionMode.NON_STRICT)
+    void shouldDeleteProductById() {
+        productDao.delete(1);
+    }
+
 }

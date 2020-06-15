@@ -7,6 +7,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
@@ -50,6 +52,24 @@ public class ListProductsWindow {
                     stage.setTitle("Edit product #" + selectedProduct.getId());
                     stage.setScene(new Scene(root));
                     stage.show();
+                }
+
+                if (event.getButton().equals(MouseButton.SECONDARY)) {
+                    final Product selectedProduct = productsTable.getSelectionModel().getSelectedItem();
+                    ContextMenu cm = new ContextMenu();
+                    MenuItem mi1 = new MenuItem("Delete product");
+                    cm.getItems().add(mi1);
+                    mi1.setOnAction(event1 -> {
+                        System.out.println("delete product: " + selectedProduct);
+
+                        GlobalContext.WEB_SOCKET.send(Command.DELETE_PRODUCT, selectedProduct.getId(), response -> {
+                            if (response.getCommand() == Command.OK) {
+                                reloadProducts();
+                            }
+                        });
+                    });
+
+                    productsTable.setContextMenu(cm);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

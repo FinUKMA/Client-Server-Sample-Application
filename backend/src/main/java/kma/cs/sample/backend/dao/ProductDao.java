@@ -44,6 +44,11 @@ public class ProductDao {
     }
 
     @Transactional
+    public void delete(final int id) {
+        jdbcTemplate.execute("delete from products where id = " + id);
+    }
+
+    @Transactional
     public void update(final Product product) {
         jdbcTemplate.update(
             "update products set name = ?, price = ?, total = ? where id = ?",

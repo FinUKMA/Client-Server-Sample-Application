@@ -20,6 +20,7 @@ public class Command<T> {
     public static final Command<ProductFilter> GET_PRODUCTS_LIST = new Command<>(3, ProductFilter.class, "GET_PRODUCTS_LIST");
     public static final Command<ProductList> RESPONSE_PRODUCTS_LIST = new Command<>(4, ProductList.class, "RESPONSE_PRODUCTS_LIST");
     public static final Command<Product> UPDATE_PRODUCT = new Command<>(5, Product.class, "UPDATE_PRODUCT");
+    public static final Command<Integer> DELETE_PRODUCT = new Command<>(6, Integer.class, "DELETE_PRODUCT");
 
     private final int command;
     private final Class<T> klass;
