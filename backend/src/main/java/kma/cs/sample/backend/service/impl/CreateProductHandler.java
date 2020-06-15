@@ -1,5 +1,6 @@
 package kma.cs.sample.backend.service.impl;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import kma.cs.sample.backend.dao.ProductDao;
@@ -23,6 +24,7 @@ class CreateProductHandler extends CommandHandler<NewProduct> {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('admin')")
     public Packet<Product> handle(final Packet<NewProduct> packet) {
         log.info("Create new product {}", packet.getBody());
         final Product product = productDao.save(packet.getBody());

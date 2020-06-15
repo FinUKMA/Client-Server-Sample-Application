@@ -3,6 +3,7 @@ package kma.cs.sample.domain.packet;
 import java.util.ArrayList;
 import java.util.List;
 
+import kma.cs.sample.domain.ErrorResponseDto;
 import kma.cs.sample.domain.NewProduct;
 import kma.cs.sample.domain.Product;
 import kma.cs.sample.domain.ProductFilter;
@@ -21,6 +22,7 @@ public class Command<T> {
     public static final Command<ProductList> RESPONSE_PRODUCTS_LIST = new Command<>(4, ProductList.class, "RESPONSE_PRODUCTS_LIST");
     public static final Command<Product> UPDATE_PRODUCT = new Command<>(5, Product.class, "UPDATE_PRODUCT");
     public static final Command<Integer> DELETE_PRODUCT = new Command<>(6, Integer.class, "DELETE_PRODUCT");
+    public static final Command<ErrorResponseDto> ERROR = new Command<>(1000, ErrorResponseDto.class, "ERROR");
 
     private final int command;
     private final Class<T> klass;

@@ -14,5 +14,6 @@ public class AuthenticatedUserDto {
     private String accessToken;
     private String login;
     private String fullName;
+    private UserRole role;
 
 }

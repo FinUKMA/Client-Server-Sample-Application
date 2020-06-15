@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import kma.cs.sample.desktop.GlobalContext;
+import kma.cs.sample.domain.ErrorResponseDto;
 import kma.cs.sample.domain.NewProduct;
 import kma.cs.sample.domain.Product;
 import kma.cs.sample.domain.packet.Command;
@@ -29,6 +30,9 @@ public class NewProductWindow {
                 final Packet<Product> getProductByIdPacket = (Packet<Product>) response;
                 System.out.println("New product: " + response);
                 messageField.setText("New product created. ID: " + getProductByIdPacket.getBody().getId());
+            }  else if (response.getCommand() == Command.ERROR) {
+                final Packet<ErrorResponseDto> errorResponse = (Packet<ErrorResponseDto>) response;
+                messageField.setText("Failed to update product. Reason: " + errorResponse.getBody().getMessage());
             } else {
                 messageField.setText("Failed to create new product");
             }

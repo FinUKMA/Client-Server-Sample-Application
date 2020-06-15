@@ -1,5 +1,6 @@
 package kma.cs.sample.backend.service.impl;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import kma.cs.sample.backend.dao.ProductDao;
@@ -21,6 +22,7 @@ class EditProductHandler extends CommandHandler<Product> {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('user')")
     public Packet<Void> handle(final Packet<Product> packet) {
         log.info("Update product {}", packet.getBody());
         productDao.update(packet.getBody());

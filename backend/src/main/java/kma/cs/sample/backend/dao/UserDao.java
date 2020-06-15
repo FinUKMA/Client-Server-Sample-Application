@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import kma.cs.sample.backend.domain.UserEntity;
 import kma.cs.sample.backend.exception.UserNotFoundException;
+import kma.cs.sample.domain.UserRole;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -26,7 +27,10 @@ public class UserDao {
 
     private static UserEntity userRowMapper(final ResultSet resultSet) throws SQLException {
         return resultSet.next()
-            ? UserEntity.of(resultSet.getInt("id"), resultSet.getString("login"), resultSet.getString("password"), resultSet.getString("full_name"))
+            ? UserEntity.of(
+                resultSet.getInt("id"), resultSet.getString("login"), resultSet.getString("password"),
+                resultSet.getString("full_name"), UserRole.valueOf(resultSet.getString("role"))
+            )
             : null;
     }
 

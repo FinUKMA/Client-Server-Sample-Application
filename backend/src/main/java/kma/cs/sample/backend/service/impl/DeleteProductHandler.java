@@ -1,5 +1,6 @@
 package kma.cs.sample.backend.service.impl;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import kma.cs.sample.backend.dao.ProductDao;
@@ -20,6 +21,7 @@ class DeleteProductHandler extends CommandHandler<Integer> {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('admin')")
     public Packet<Void> handle(final Packet<Integer> packet) {
         final int productId = packet.getBody();
         log.info("Delete product {}", productDao.getById(productId));

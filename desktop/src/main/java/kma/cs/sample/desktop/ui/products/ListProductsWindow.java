@@ -14,6 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import kma.cs.sample.desktop.GlobalContext;
+import kma.cs.sample.domain.ErrorResponseDto;
 import kma.cs.sample.domain.Product;
 import kma.cs.sample.domain.ProductFilter;
 import kma.cs.sample.domain.ProductList;
@@ -65,6 +66,9 @@ public class ListProductsWindow {
                         GlobalContext.WEB_SOCKET.send(Command.DELETE_PRODUCT, selectedProduct.getId(), response -> {
                             if (response.getCommand() == Command.OK) {
                                 reloadProducts();
+                            } else if (response.getCommand() == Command.ERROR) {
+                                final Packet<ErrorResponseDto> errorResponse = (Packet<ErrorResponseDto>) response;
+                                System.out.println("Failed to update product. Reason: " + errorResponse.getBody().getMessage());
                             }
                         });
                     });
@@ -105,6 +109,9 @@ public class ListProductsWindow {
                 System.out.println("returned products " + productListPacket.getBody().getProducts().size());
                 productsTable.getItems().clear();
                 productsTable.getItems().addAll(productListPacket.getBody().getProducts());
+            } else if (response.getCommand() == Command.ERROR) {
+                final Packet<ErrorResponseDto> errorResponse = (Packet<ErrorResponseDto>) response;
+                System.out.println("Failed to update product. Reason: " + errorResponse.getBody().getMessage());
             } else {
                 System.out.println("unexpected response");
             }

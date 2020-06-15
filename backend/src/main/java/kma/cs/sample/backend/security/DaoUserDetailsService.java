@@ -1,7 +1,5 @@
 package kma.cs.sample.backend.security;
 
-import java.util.List;
-
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -28,7 +26,7 @@ public class DaoUserDetailsService implements UserDetailsService {
             .credentialsExpired(false)
             .accountLocked(false)
             .accountExpired(false)
-            .authorities(List.of())
+            .authorities(user.getRole().name())
             .build();
 
         return AuthenticatedUser.builder()
